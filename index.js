@@ -8,6 +8,9 @@ const URL = require('./model/urlScehma')
 const {mongoDbConnect}=require('./config/mongo');
 
 const urlRouter=require('./routs/user');
+const staticRoute=require('./routs/staticrout');
+const authRoute=require ('./routs/authentication')
+
 const app= express();
 const PORT= 8001;
 
@@ -20,17 +23,11 @@ app.set('view engine','ejs');
 app.set('views', path.resolve('./view'));
  
 //route to get the home page to send link
-app.get('/', async (req, res) => {
-    try {
-        const allUrls = await URL.find({});
 
-        return res.render('home', { url: allUrls });
-    } catch (error) {
-        console.error("Error fetching URLs:", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
 
 app.use("/url",urlRouter);
+
+app.use('/',staticRoute);
+app.use('/user',authRoute);
 
 app.listen(PORT,()=>{console.log("Port is listening at 8001")});

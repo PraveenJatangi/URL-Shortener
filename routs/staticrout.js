@@ -1,8 +1,8 @@
 const express =require('express')
 const router= express.Router();
+const {handlePostFromUi,handleGetAuthPage,handleGetLoginPage}=require('../controllers/static');
 
-router.get('/',(req,res)=>{
-    
-    return res.render('home')
-})
+router.get('/',handlePostFromUi);
+router.get('/signup',handleGetAuthPage);
+router.get('/login',handleGetLoginPage);
 module.exports=router;
