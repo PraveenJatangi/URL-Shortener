@@ -1,7 +1,8 @@
 const URl = require('../model/urlScehma');
 
 async function handlePostFromUi(req,res){
-    const allUrls = await URl.find({});
+    if(!req.user) return res.render('/login');
+    const allUrls = await URl.find({createdby:req.user._id});
  return res.render('home',{url: allUrls
 
  })

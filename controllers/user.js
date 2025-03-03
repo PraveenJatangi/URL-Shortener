@@ -13,7 +13,8 @@ async function handlePostUrl(req,res){
      await URl.create({
         shortid:shortId,
         originaUrl:body.url,
-        visitHistory:[]
+        visitHistory:[],
+        createdby: req.user._id
     });
 
     return res.render('home',{
@@ -32,7 +33,8 @@ async function handleGetUrl(req,res){
         shortid
     },{
         $push:{ visitHistory:{  timestamp:Date.now() }  }
-    });
+    }, {new:true});
+    
     if (!entry) {
         return res.status(404).json({ message: "URL not found" });
     }

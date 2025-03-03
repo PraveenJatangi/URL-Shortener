@@ -5,6 +5,10 @@ const ejs = require ('ejs');
 const path = require ('path');
 const URL = require('./model/urlScehma')
 
+const cookieParser = require('cookie-parser')
+
+const {restricToLoggedInUserOnly,checkAuth}=require('./middleware/auth')
+
 const {mongoDbConnect}=require('./config/mongo');
 
 const urlRouter=require('./routs/user');
@@ -18,6 +22,7 @@ mongoDbConnect("mongodb://127.0.0.1:27017/url-shortner");
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cookieParser());
 
 app.set('view engine','ejs');
 app.set('views', path.resolve('./view'));
@@ -25,9 +30,8 @@ app.set('views', path.resolve('./view'));
 //route to get the home page to send link
 
 
-app.use("/url",urlRouter);
-
-app.use('/',staticRoute);
+app.use("/url",restricToLoggedInUserOnly,urlRouter);
+app.use('/',checkAuth,staticRoute);
 app.use('/user',authRoute);
 
 app.listen(PORT,()=>{console.log("Port is listening at 8001")});
